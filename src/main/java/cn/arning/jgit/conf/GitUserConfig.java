@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
  * @author arning
  */
 @Component
-public class User {
+public class GitUserConfig {
 
     private String username;
 
     private String password;
 
-    public User() {
+    public GitUserConfig() {
         this.username = System.getenv("GIT_USERNAME");
         this.password = System.getenv("GIT_PASSWORD");
     }

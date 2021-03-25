@@ -3,8 +3,11 @@ package cn.arning.jgit.command;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
+/**
+ * @author arning
+ */
 public interface Execute {
 
-    public String execute(Git git,String message,String version) throws GitAPIException;
+    String execute(Git git,String message,String version) throws GitAPIException;
 
 }
