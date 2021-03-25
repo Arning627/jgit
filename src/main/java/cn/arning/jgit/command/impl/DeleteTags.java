@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * @author arning
+ */
 @Component
 public class DeleteTags implements Execute {
 
@@ -27,14 +30,9 @@ public class DeleteTags implements Execute {
                 RefUpdate refUpdate = git.getRepository().updateRef(ref.getName());
                 refUpdate.setForceUpdate(true);
                 refUpdate.delete();
-
-
-//                List<String> call = git.tagDelete().setTags(ref.getName()).call();
-//                for (String s : call) {
-//                    System.out.println(s);
-//                }
             }
         }
+
         git.push().setPushTags().setRemote("origin").setCredentialsProvider(gitAuthentication).call();
         return "success";
 

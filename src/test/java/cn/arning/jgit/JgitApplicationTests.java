@@ -23,6 +23,11 @@ class JgitApplicationTests {
             String absolutePath = file1.getAbsolutePath();
             System.out.println(absolutePath);
         }
+
+        String property = System.getProperty("java.home");
+        System.out.println(property);
+
+
     }
 
 
