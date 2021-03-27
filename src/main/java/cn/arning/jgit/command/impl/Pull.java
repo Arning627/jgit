@@ -15,7 +15,7 @@ public class Pull implements Execute {
 
     @Override
     public String execute(Git git, String message, String version) throws GitAPIException {
-        PullResult call = git.pull().call();
+        PullResult call = git.pull().setRemote(message).call();
         boolean successful = call.isSuccessful();
         System.out.println(successful);
         return null;

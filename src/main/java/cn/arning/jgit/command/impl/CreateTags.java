@@ -5,11 +5,12 @@ import cn.arning.jgit.command.Execute;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.PushResult;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author arning
@@ -17,29 +18,31 @@ import java.util.List;
 @Component
 public class CreateTags implements Execute {
 
-    @Autowired
-    private GitAuthentication gitAuthentication;
 
     @Override
     public String execute(Git git, String message, String version) {
-        String messages = "";
+        Repository repository = git.getRepository();
+        String projectFileName = repository.getDirectory().getParentFile().getName();
+        String result = "";
         try {
-            List<Ref> localTags = git.tagList().call();
-            for (Ref localTag : localTags) {
-                String tagName = localTag.getName();
-                String[] tag = tagName.split("/");
-                if (version.equals(tag[tag.length - 1])) {
-                    return "tag" + version + "已存在";
-                }
+            Ref ref = repository.getTags().get(version);
+            if (null == ref) {
+                git.tag().setMessage(message).setName(version).call();
+                System.out.println(projectFileName + " local tag " + version + " already exists...");
             }
-            git.tag().setMessage(message).setName(version).call();
-            Iterable<PushResult> origin = git.push().setPushTags().setRemote("origin").setCredentialsProvider(gitAuthentication).call();
-            messages = origin.iterator().next().getMessages();
-
+            GitAuthentication gitAuthentication = GitAuthentication.isAuthentication();
+            git.push().setPushTags().setRemote("origin").setCredentialsProvider(gitAuthentication).call();
+            result = projectFileName + "====> tag " + version + " pushed...";
         } catch (GitAPIException e) {
-            messages = "创建tag异常";
+            result = projectFileName + "====> create tag error...Deleting local tag ===>" + version;
+            try {
+                git.tagDelete().setTags(version).call();
+            } catch (GitAPIException e1) {
+                result = projectFileName + "Local label deletion failed...";
+                System.out.println(e1);
+            }
             System.out.println(e);
         }
-        return messages;
+        return result;
     }
 }

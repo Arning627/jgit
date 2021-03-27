@@ -2,6 +2,7 @@ package cn.arning.jgit.shell;
 
 
 import cn.arning.jgit.command.Execute;
+import cn.arning.jgit.conf.GitUserConfig;
 import cn.arning.jgit.utils.FileUtil;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -32,18 +33,45 @@ public class Method {
     @Autowired
     private Execute pull;
 
+    /**
+     * 设置认证信息
+     *
+     * @param user
+     * @param pwd
+     * @return
+     */
+    @ShellMethod("insert user")
+    public String auth(@ShellOption("-u") String user, @ShellOption("-p") String pwd) {
+        GitUserConfig.IS_AUTHENTICATION = true;
+        GitUserConfig.GIT_PASSWORD = pwd;
+        GitUserConfig.GIT_USERNAME = user;
+        return "setting...";
+    }
+
     @ShellMethod("create tags")
-    public String tag(@ShellOption("-v") String version, @ShellOption("-m") String message) throws IOException, GitAPIException {
+    public String tag(@ShellOption("-v") String version, @ShellOption("-m") String message, @ShellOption("-f") String function) throws IOException, GitAPIException {
         List<File> gits = new ArrayList<>();
-        String currentDir = System.getProperties().getProperty("user.dir");
+//        String currentDir = System.getProperties().getProperty("user.dir");
+        String currentDir = "/Users/arning/Desktop/tmp";
         File projectFile = new File(currentDir);
         List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
+        System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
         String execute = "";
-        for (File file1 : localGitRepository) {
-            Git git = Git.open(file1);
-            execute = createTags.execute(git, message, version);
+        for (File file : localGitRepository) {
+            Git git = Git.open(file);
+            switch (function) {
+                case "d":
+                    execute = deleteTags.execute(git, message, version);
+                    break;
+                case "c":
+                    execute = createTags.execute(git, message, version);
+                    break;
+                default:
+                    System.out.println("无操作");
+            }
+            System.out.println(execute);
         }
-        return execute;
+        return "done...";
     }
 
 

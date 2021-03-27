@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class GitAuthentication extends UsernamePasswordCredentialsProvider {
 
-    static String git_username = System.getenv("GIT_USERNAME");
-    static String git_password = System.getenv("GIT_PASSWORD");
 
     public GitAuthentication(String username, String password) {
         super(username, password);
@@ -21,6 +19,10 @@ public class GitAuthentication extends UsernamePasswordCredentialsProvider {
     }
 
     public GitAuthentication() {
-        super(git_username, git_password);
+        super(GitUserConfig.GIT_USERNAME, GitUserConfig.GIT_PASSWORD);
+    }
+
+    public static GitAuthentication isAuthentication() {
+        return new GitAuthentication();
     }
 }

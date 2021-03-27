@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author arning
@@ -23,6 +25,14 @@ public class DeleteTags implements Execute {
 
     @Override
     public String execute(Git git, String message, String version) throws GitAPIException, IOException {
+
+        Map<String, Ref> tags = git.getRepository().getTags();
+
+        for (String s : tags.keySet()) {
+            System.out.println(s);
+            Ref ref = tags.get(s);
+        }
+
         List<Ref> tagList = git.tagList().call();
         for (Ref ref : tagList) {
             String[] tag = ref.getName().split("/");
