@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 /**
  * @author arning
  */
-@Component
 public class GitAuthentication extends UsernamePasswordCredentialsProvider {
 
 
@@ -22,7 +21,7 @@ public class GitAuthentication extends UsernamePasswordCredentialsProvider {
         super(GitUserConfig.GIT_USERNAME, GitUserConfig.GIT_PASSWORD);
     }
 
-    public static GitAuthentication isAuthentication() {
+    public static GitAuthentication authentication() {
         return new GitAuthentication();
     }
 }

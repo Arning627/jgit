@@ -6,11 +6,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.PushResult;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author arning
@@ -30,7 +26,7 @@ public class CreateTags implements Execute {
                 git.tag().setMessage(message).setName(version).call();
                 System.out.println(projectFileName + " local tag " + version + " already exists...");
             }
-            GitAuthentication gitAuthentication = GitAuthentication.isAuthentication();
+            GitAuthentication gitAuthentication = GitAuthentication.authentication();
             git.push().setPushTags().setRemote("origin").setCredentialsProvider(gitAuthentication).call();
             result = projectFileName + "====> tag " + version + " pushed...";
         } catch (GitAPIException e) {

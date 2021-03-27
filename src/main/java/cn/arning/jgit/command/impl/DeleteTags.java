@@ -6,11 +6,9 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefUpdate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,13 +18,16 @@ import java.util.Map;
 @Component
 public class DeleteTags implements Execute {
 
-    @Autowired
-    private GitAuthentication gitAuthentication;
+
+
 
     @Override
     public String execute(Git git, String message, String version) throws GitAPIException, IOException {
 
         Map<String, Ref> tags = git.getRepository().getTags();
+
+        GitAuthentication authentication = GitAuthentication.authentication();
+
 
         for (String s : tags.keySet()) {
             System.out.println(s);
@@ -43,7 +44,7 @@ public class DeleteTags implements Execute {
             }
         }
 
-        git.push().setPushTags().setRemote("origin").setCredentialsProvider(gitAuthentication).call();
+        git.push().setPushTags().setRemote("origin").setCredentialsProvider(authentication).call();
         return "success";
 
     }
