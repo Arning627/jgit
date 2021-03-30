@@ -1,15 +1,22 @@
 package cn.arning.jgit;
 
+import cn.arning.jgit.conf.GitAuthentication;
 import cn.arning.jgit.utils.FileUtil;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullResult;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.RemoteConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@SpringBootTest
 class JgitApplicationTests {
 
 
@@ -26,6 +33,14 @@ class JgitApplicationTests {
 
         String property = System.getProperty("java.home");
         System.out.println(property);
+    }
+
+    @Test
+    void test1() throws IOException, GitAPIException {
+        File file = new File("/Users/arning/Desktop/tmp/gitTest/.git");
+        Git git  = Git.open(file);
+
+        git.checkout().setName("master").call();
 
 
     }

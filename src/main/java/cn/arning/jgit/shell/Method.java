@@ -6,6 +6,7 @@ import cn.arning.jgit.conf.GitUserConfig;
 import cn.arning.jgit.utils.FileUtil;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.transport.RemoteConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -72,6 +73,37 @@ public class Method {
             System.out.println(execute);
         }
         return "done...";
+    }
+
+    @ShellMethod("remote")
+    public void getRemoteTag() throws IOException, GitAPIException {
+        List<File> gits = new ArrayList<>();
+        String currentDir = System.getProperties().getProperty("user.dir");
+        File projectFile = new File(currentDir);
+        List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
+        System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
+        for (File file : localGitRepository) {
+            Git open = Git.open(file);
+            List<RemoteConfig> call = open.remoteList().call();
+            for (RemoteConfig remoteConfig : call) {
+                String name = remoteConfig.getName();
+                System.out.println(name);
+            }
+
+        }
+    }
+    @ShellMethod("pull code")
+    public void pull(@ShellOption("-b")String branch) throws IOException {
+        List<File> gits = new ArrayList<>();
+        String currentDir = System.getProperties().getProperty("user.dir");
+        File projectFile = new File(currentDir);
+        List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
+        System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
+        for (File file : localGitRepository) {
+            Git open = Git.open(file);
+            String remoteBranchName = open.pull().getRemoteBranchName();
+            System.out.println(remoteBranchName);
+        }
     }
 
 
