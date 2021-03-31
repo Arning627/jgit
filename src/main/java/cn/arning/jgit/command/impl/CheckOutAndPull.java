@@ -23,6 +23,6 @@ public class CheckOutAndPull implements Execute {
         git.checkout().setName(message).call();
         git.pull().call();
         String name = git.getRepository().getDirectory().getParentFile().getName();
-
+        System.out.println(name + "检出完成,当前分支为 " + message);
     }
 }

@@ -92,24 +92,6 @@ public class Method {
         }
     }
 
-    @ShellMethod("remote")
-    public void getRemoteTag() throws IOException, GitAPIException {
-        List<File> gits = new ArrayList<>();
-        String currentDir = System.getProperties().getProperty("user.dir");
-        File projectFile = new File(currentDir);
-        List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
-        System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
-        for (File file : localGitRepository) {
-            Git open = Git.open(file);
-            List<RemoteConfig> call = open.remoteList().call();
-            for (RemoteConfig remoteConfig : call) {
-                String name = remoteConfig.getName();
-                System.out.println(name);
-            }
-
-        }
-    }
-
     @ShellMethod("pull code")
     public void pull(@ShellOption("-b") String branch) throws IOException, GitAPIException {
         List<File> gits = new ArrayList<>();
@@ -120,9 +102,11 @@ public class Method {
         for (File file : localGitRepository) {
             Git git = Git.open(file);
             checkOutAndPull.execute(git, branch, "");
-            System.out.println("done");
         }
+        System.out.println("done");
     }
+
+
 
 
 }
