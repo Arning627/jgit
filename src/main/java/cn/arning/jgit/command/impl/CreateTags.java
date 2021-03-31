@@ -2,11 +2,15 @@ package cn.arning.jgit.command.impl;
 
 import cn.arning.jgit.conf.GitAuthentication;
 import cn.arning.jgit.command.Execute;
+import cn.arning.jgit.shell.Method;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author arning
@@ -16,29 +20,33 @@ public class CreateTags implements Execute {
 
 
     @Override
-    public String execute(Git git, String message, String version) {
+    public void execute(Git git, String message, String version) {
         Repository repository = git.getRepository();
         String projectFileName = repository.getDirectory().getParentFile().getName();
-        String result = "";
+        GitAuthentication gitAuthentication = GitAuthentication.authentication();
         try {
             Ref ref = repository.getTags().get(version);
             if (null == ref) {
                 git.tag().setMessage(message).setName(version).call();
-                System.out.println(projectFileName + " local tag " + version + " already exists...");
+                System.out.println(projectFileName + " creating tag " + version + "...");
             }
-            GitAuthentication gitAuthentication = GitAuthentication.authentication();
             git.push().setPushTags().setRemote("origin").setCredentialsProvider(gitAuthentication).call();
-            result = projectFileName + "====> tag " + version + " pushed...";
-        } catch (GitAPIException e) {
-            result = projectFileName + "====> create tag error...Deleting local tag ===>" + version;
+            System.out.println(projectFileName + "====> tag " + version + " pushed...");
+        } catch (GitAPIException firstPushError) {
             try {
-                git.tagDelete().setTags(version).call();
-            } catch (GitAPIException e1) {
-                result = projectFileName + "Local label deletion failed...";
-                System.out.println(e1);
+                git.push().setPushTags().setRemote("origin").setCredentialsProvider(gitAuthentication).call();
+            } catch (GitAPIException secondPushError) {
+                Method.errorPath.add(projectFileName);
+                System.out.println(projectFileName + "====> create tag error...Deleting local tag ===>" + version);
+                try {
+                    git.tagDelete().setTags(version).call();
+                } catch (GitAPIException deleteError) {
+                    System.out.println(projectFileName + "Local label deletion failed...");
+                    System.out.println(deleteError);
+                }
             }
-            System.out.println(e);
+            System.out.println(firstPushError);
         }
-        return result;
+
     }
 }

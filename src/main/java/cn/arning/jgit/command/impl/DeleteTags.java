@@ -22,7 +22,7 @@ public class DeleteTags implements Execute {
 
 
     @Override
-    public String execute(Git git, String message, String version) throws GitAPIException, IOException {
+    public void execute(Git git, String message, String version) throws GitAPIException, IOException {
 
         Map<String, Ref> tags = git.getRepository().getTags();
 
@@ -45,7 +45,7 @@ public class DeleteTags implements Execute {
         }
 
         git.push().setPushTags().setRemote("origin").setCredentialsProvider(authentication).call();
-        return "success";
+
 
     }
 }

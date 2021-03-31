@@ -10,6 +10,6 @@ import java.io.IOException;
  */
 public interface Execute {
 
-    String execute(Git git,String message,String version) throws GitAPIException, IOException;
+    void execute(Git git,String message,String version) throws GitAPIException, IOException;
 
 }

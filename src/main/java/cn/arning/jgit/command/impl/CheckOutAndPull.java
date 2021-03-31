@@ -19,10 +19,10 @@ public class CheckOutAndPull implements Execute {
 
 
     @Override
-    public String execute(Git git, String message, String version) throws GitAPIException, IOException {
+    public void execute(Git git, String message, String version) throws GitAPIException, IOException {
         git.checkout().setName(message).call();
         git.pull().call();
         String name = git.getRepository().getDirectory().getParentFile().getName();
-        return name;
+
     }
 }

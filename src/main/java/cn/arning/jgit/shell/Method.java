@@ -34,6 +34,10 @@ public class Method {
     @Autowired
     private Execute checkOutAndPull;
 
+
+    //推送失败工程集合
+    public static List<String> errorPath = new ArrayList<>();
+
     /**
      * 设置认证信息
      *
@@ -49,30 +53,43 @@ public class Method {
         return "setting...";
     }
 
+    /**
+     * 创建或删除tag
+     *
+     * @param version
+     * @param message
+     * @param function
+     * @throws IOException
+     * @throws GitAPIException
+     */
     @ShellMethod("create tags")
-    public String tag(@ShellOption("-v") String version, @ShellOption("-m") String message, @ShellOption("-f") String function) throws IOException, GitAPIException {
+    public void tag(@ShellOption("-v") String version, @ShellOption("-m") String message, @ShellOption("-f") String function) throws IOException, GitAPIException {
         List<File> gits = new ArrayList<>();
 //        String currentDir = System.getProperties().getProperty("user.dir");
         String currentDir = "/Users/arning/Desktop/tmp";
         File projectFile = new File(currentDir);
         List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
         System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
-        String execute = "";
         for (File file : localGitRepository) {
             Git git = Git.open(file);
             switch (function) {
                 case "d":
-                    execute = deleteTags.execute(git, message, version);
+                    deleteTags.execute(git, message, version);
                     break;
                 case "c":
-                    execute = createTags.execute(git, message, version);
+                    createTags.execute(git, message, version);
                     break;
                 default:
                     System.out.println("无操作");
             }
-            System.out.println(execute);
         }
-        return "done...";
+        System.out.println("更新完成,成功 " + (localGitRepository.size() - errorPath.size()) + " 条记录,失败 " + errorPath.size() + " 条记录");
+        if (errorPath.size() > 0) {
+            System.out.println("失败目录如下: ");
+            for (String path : errorPath) {
+                System.out.println(path);
+            }
+        }
     }
 
     @ShellMethod("remote")
@@ -92,8 +109,9 @@ public class Method {
 
         }
     }
+
     @ShellMethod("pull code")
-    public void pull(@ShellOption("-b")String branch) throws IOException, GitAPIException {
+    public void pull(@ShellOption("-b") String branch) throws IOException, GitAPIException {
         List<File> gits = new ArrayList<>();
         String currentDir = System.getProperties().getProperty("user.dir");
         File projectFile = new File(currentDir);
@@ -101,8 +119,8 @@ public class Method {
         System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
         for (File file : localGitRepository) {
             Git git = Git.open(file);
-            String execute = checkOutAndPull.execute(git, branch, "");
-            System.out.println(execute);
+            checkOutAndPull.execute(git, branch, "");
+            System.out.println("done");
         }
     }
 
