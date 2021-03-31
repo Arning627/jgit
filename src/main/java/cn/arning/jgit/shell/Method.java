@@ -32,7 +32,7 @@ public class Method {
     private Execute deleteTags;
 
     @Autowired
-    private Execute pull;
+    private Execute checkOutAndPull;
 
     /**
      * 设置认证信息
@@ -93,16 +93,16 @@ public class Method {
         }
     }
     @ShellMethod("pull code")
-    public void pull(@ShellOption("-b")String branch) throws IOException {
+    public void pull(@ShellOption("-b")String branch) throws IOException, GitAPIException {
         List<File> gits = new ArrayList<>();
         String currentDir = System.getProperties().getProperty("user.dir");
         File projectFile = new File(currentDir);
         List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
         System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
         for (File file : localGitRepository) {
-            Git open = Git.open(file);
-            String remoteBranchName = open.pull().getRemoteBranchName();
-            System.out.println(remoteBranchName);
+            Git git = Git.open(file);
+            String execute = checkOutAndPull.execute(git, branch, "");
+            System.out.println(execute);
         }
     }
 

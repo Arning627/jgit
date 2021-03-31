@@ -39,9 +39,8 @@ class JgitApplicationTests {
     void test1() throws IOException, GitAPIException {
         File file = new File("/Users/arning/Desktop/tmp/gitTest/.git");
         Git git  = Git.open(file);
-
-        git.checkout().setName("master").call();
-
+        String branch = git.getRepository().getBranch();
+        System.out.println(branch);
 
     }
 

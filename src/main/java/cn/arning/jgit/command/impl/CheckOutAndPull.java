@@ -9,6 +9,8 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 /**
  * @author arning
  */
@@ -17,10 +19,10 @@ public class CheckOutAndPull implements Execute {
 
 
     @Override
-    public String execute(Git git, String message, String version) throws GitAPIException {
-        GitAuthentication authentication = GitAuthentication.authentication();
+    public String execute(Git git, String message, String version) throws GitAPIException, IOException {
         git.checkout().setName(message).call();
         git.pull().call();
-        return null;
+        String name = git.getRepository().getDirectory().getParentFile().getName();
+        return name;
     }
 }
