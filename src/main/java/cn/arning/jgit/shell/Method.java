@@ -35,7 +35,7 @@ public class Method {
     private Execute checkOutAndPull;
 
 
-    //推送失败工程集合
+    //失败工程集合
     public static List<String> errorPath = new ArrayList<>();
 
     /**
@@ -84,18 +84,14 @@ public class Method {
             }
         }
         System.out.println("更新完成,成功 " + (localGitRepository.size() - errorPath.size()) + " 条记录,失败 " + errorPath.size() + " 条记录");
-        if (errorPath.size() > 0) {
-            System.out.println("失败目录如下: ");
-            for (String path : errorPath) {
-                System.out.println(path);
-            }
-        }
+        printErrorPath();
     }
 
     @ShellMethod("pull code")
     public void pull(@ShellOption("-b") String branch) throws IOException, GitAPIException {
         List<File> gits = new ArrayList<>();
-        String currentDir = System.getProperties().getProperty("user.dir");
+//        String currentDir = System.getProperties().getProperty("user.dir");
+        String currentDir = "/Users/arning/Desktop/tmp";
         File projectFile = new File(currentDir);
         List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
         System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
@@ -103,10 +99,22 @@ public class Method {
             Git git = Git.open(file);
             checkOutAndPull.execute(git, branch, "");
         }
-        System.out.println("done");
+        System.out.println("更新完成,成功 " + (localGitRepository.size() - errorPath.size()) + " 条记录,失败 " + errorPath.size() + " 条记录");
+        printErrorPath();
+
+
     }
 
 
+    private void printErrorPath() {
+        if (errorPath.size() > 0) {
+            System.out.println("失败目录如下: ");
+            for (String path : errorPath) {
+                System.out.println(path);
+            }
+            errorPath.clear();
+        }
+    }
 
 
 }
