@@ -87,6 +87,12 @@ public class Method {
         printErrorPath();
     }
 
+    /**
+     * 切换分支 检出
+     * @param branch
+     * @throws IOException
+     * @throws GitAPIException
+     */
     @ShellMethod("pull code")
     public void pull(@ShellOption("-b") String branch) throws IOException, GitAPIException {
         List<File> gits = new ArrayList<>();
