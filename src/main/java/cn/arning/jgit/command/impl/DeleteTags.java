@@ -22,30 +22,30 @@ public class DeleteTags implements Execute {
 
 
     @Override
-    public void execute(Git git, String message, String version) throws GitAPIException, IOException {
+    public void execute(Git git, String describe, String version) {
 
-        Map<String, Ref> tags = git.getRepository().getTags();
-
-        GitAuthentication authentication = GitAuthentication.authentication();
-
-
-        for (String s : tags.keySet()) {
-            System.out.println(s);
-            Ref ref = tags.get(s);
-        }
-
-        List<Ref> tagList = git.tagList().call();
-        for (Ref ref : tagList) {
-            String[] tag = ref.getName().split("/");
-            if (version.equals(tag[tag.length - 1])) {
-                RefUpdate refUpdate = git.getRepository().updateRef(ref.getName());
-                refUpdate.setForceUpdate(true);
-                refUpdate.delete();
-            }
-        }
-
-        git.push().setPushTags().setRemote("origin").setCredentialsProvider(authentication).call();
-
+//        Map<String, Ref> tags = git.getRepository().getTags();
+//
+//        GitAuthentication authentication = GitAuthentication.authentication();
+//
+//
+//        for (String s : tags.keySet()) {
+//            System.out.println(s);
+//            Ref ref = tags.get(s);
+//        }
+//
+//        List<Ref> tagList = git.tagList().call();
+//        for (Ref ref : tagList) {
+//            String[] tag = ref.getName().split("/");
+//            if (version.equals(tag[tag.length - 1])) {
+//                RefUpdate refUpdate = git.getRepository().updateRef(ref.getName());
+//                refUpdate.setForceUpdate(true);
+//                refUpdate.delete();
+//            }
+//        }
+//
+//        git.push().setPushTags().setRemote("origin").setCredentialsProvider(authentication).call();
+//
 
     }
 }

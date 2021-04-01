@@ -7,6 +7,7 @@ import cn.arning.jgit.utils.FileUtil;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.RemoteConfig;
+import org.eclipse.jgit.util.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -35,8 +36,25 @@ public class Method {
     private Execute checkOutAndPull;
 
 
-    //失败工程集合
+    /**
+     * 异常目录集合
+     */
     public static List<String> errorPath = new ArrayList<>();
+
+    /**
+     * 当前目录
+     */
+    static String currentDir;
+
+    static File projectFile;
+
+    List<File> gits = new ArrayList<>();
+
+    static {
+        currentDir = System.getProperties().getProperty("user.dir");
+        System.out.println("当前目录为: " + currentDir);
+        projectFile = new File(currentDir);
+    }
 
     /**
      * 设置认证信息
@@ -55,58 +73,56 @@ public class Method {
 
     /**
      * 创建或删除tag
-     *
      * @param version
      * @param message
      * @param function
-     * @throws IOException
-     * @throws GitAPIException
      */
     @ShellMethod("create tags")
-    public void tag(@ShellOption("-v") String version, @ShellOption("-m") String message, @ShellOption("-f") String function) throws IOException, GitAPIException {
-        List<File> gits = new ArrayList<>();
-//        String currentDir = System.getProperties().getProperty("user.dir");
-        String currentDir = "/Users/arning/Desktop/tmp";
-        File projectFile = new File(currentDir);
+    public void tag(@ShellOption("-v") String version, @ShellOption("-m") String message, @ShellOption("-f") String function) {
         List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
         System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
-        for (File file : localGitRepository) {
-            Git git = Git.open(file);
-            switch (function) {
-                case "d":
-                    deleteTags.execute(git, message, version);
-                    break;
-                case "c":
-                    createTags.execute(git, message, version);
-                    break;
-                default:
-                    System.out.println("无操作");
+        try {
+            for (File file : localGitRepository) {
+                Git git = Git.open(file);
+                switch (function) {
+                    case "d":
+                        deleteTags.execute(git, message, version);
+                        break;
+                    case "c":
+                        createTags.execute(git, message, version);
+                        break;
+                    default:
+                        System.out.println("无操作");
+                }
             }
+            System.out.println("更新完成,成功 " + (localGitRepository.size() - errorPath.size()) + " 条记录,失败 " + errorPath.size() + " 条记录");
+            printErrorPath();
+            gits.clear();
+        } catch (IOException e) {
+            System.out.println(e);
         }
-        System.out.println("更新完成,成功 " + (localGitRepository.size() - errorPath.size()) + " 条记录,失败 " + errorPath.size() + " 条记录");
-        printErrorPath();
     }
 
     /**
      * 切换分支 检出
+     *
      * @param branch
-     * @throws IOException
-     * @throws GitAPIException
      */
     @ShellMethod("pull code")
-    public void pull(@ShellOption("-b") String branch) throws IOException, GitAPIException {
-        List<File> gits = new ArrayList<>();
-//        String currentDir = System.getProperties().getProperty("user.dir");
-        String currentDir = "/Users/arning/Desktop/tmp";
-        File projectFile = new File(currentDir);
+    public void pull(@ShellOption("-b") String branch) {
         List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
         System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
-        for (File file : localGitRepository) {
-            Git git = Git.open(file);
-            checkOutAndPull.execute(git, branch, "");
+        try {
+            for (File file : localGitRepository) {
+                Git git = Git.open(file);
+                checkOutAndPull.execute(git, branch, "");
+            }
+            System.out.println("更新完成,成功 " + (localGitRepository.size() - errorPath.size()) + " 条记录,失败 " + errorPath.size() + " 条记录");
+            printErrorPath();
+            gits.clear();
+        } catch (IOException e) {
+            System.out.println(e);
         }
-        System.out.println("更新完成,成功 " + (localGitRepository.size() - errorPath.size()) + " 条记录,失败 " + errorPath.size() + " 条记录");
-        printErrorPath();
 
 
     }

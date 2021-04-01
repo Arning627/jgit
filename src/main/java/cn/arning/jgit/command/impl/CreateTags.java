@@ -20,14 +20,14 @@ public class CreateTags implements Execute {
 
 
     @Override
-    public void execute(Git git, String message, String version) {
+    public void execute(Git git, String describe, String version) {
         Repository repository = git.getRepository();
         String projectFileName = repository.getDirectory().getParentFile().getName();
         GitAuthentication gitAuthentication = GitAuthentication.authentication();
         try {
             Ref ref = repository.getTags().get(version);
             if (null == ref) {
-                git.tag().setMessage(message).setName(version).call();
+                git.tag().setMessage(describe).setName(version).call();
                 System.out.println(projectFileName + " creating tag " + version + "...");
             }
             git.push().setPushTags().setRemote("origin").setCredentialsProvider(gitAuthentication).call();

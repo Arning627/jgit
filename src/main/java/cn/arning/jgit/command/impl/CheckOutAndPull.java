@@ -21,15 +21,14 @@ public class CheckOutAndPull implements Execute {
 
 
     @Override
-    public void execute(Git git, String message, String version) {
+    public void execute(Git git, String branch, String version) {
         Repository repository = git.getRepository();
         String projectName = repository.getDirectory().getParentFile().getName();
         try {
-            git.checkout().setName(message).call();
-            git.pull().call();
-            String branchName = git.getRepository().getDirectory().getParentFile().getName();
-            System.out.println(branchName + "检出完成,当前分支为 " + message);
-        } catch (GitAPIException firstException) {
+            git.checkout().setName(branch).call();
+            git.pull().setCredentialsProvider(GitAuthentication.authentication()).call();
+            System.out.println(projectName + "检出完成,当前分支为 " + repository.getBranch());
+        } catch (GitAPIException | IOException firstException) {
             System.out.println(firstException);
             Method.errorPath.add(projectName);
         }
