@@ -3,22 +3,17 @@ package cn.arning.jgit;
 import cn.arning.jgit.conf.GitAuthentication;
 import cn.arning.jgit.utils.FileUtil;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.PullResult;
+import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.dircache.DirCache;
-import org.eclipse.jgit.dircache.DirCacheBuilder;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.transport.RemoteConfig;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 class JgitApplicationTests {
 
@@ -68,6 +63,39 @@ class JgitApplicationTests {
         System.out.println("\033[31;2mauth -u [用户名] -p [密码] \033[0m");
         System.out.println("\033[31;2mtag  -v [版本] -m [描述信息] -f [c 创建,d 删除]\033[0m");
         System.out.println("\033[31;2mpull -b [分支]\033[0m");
+    }
+
+    @Test
+    void testStash() throws IOException, GitAPIException {
+        File file = new File(path);
+        Git git = Git.open(file);
+        Status call = git.status().call();
+        Set<String> modified = call.getModified();
+        for (String s : modified) {
+            System.out.println("modified=>>>>"+s);
+        }
+        Set<String> changed = call.getChanged();
+        System.out.println(changed.size());
+        for (String s : changed) {
+            System.out.println("changed=>>>>"+s);
+        }
+        Set<String> uncommittedChanges = call.getUncommittedChanges();
+        System.out.println(uncommittedChanges.size());
+        Set<String> added = call.getAdded();
+        for (String s : added) {
+            System.out.println("added=>>>>"+s);
+        }
+    }
+
+    @Test
+    void deleteTag() throws IOException, GitAPIException {
+        File file = new File(path);
+        Git git = Git.open(file);
+        List<String> call = git.tagDelete().setTags("1.1.1").call();
+
+        git.push().setPushTags().setCredentialsProvider(GitAuthentication.authentication()).call();
+
+
     }
 
 

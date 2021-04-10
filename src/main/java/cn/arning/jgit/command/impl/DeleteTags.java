@@ -44,7 +44,7 @@ public class DeleteTags implements Execute {
 //            }
 //        }
 //
-//        git.push().setPushTags().setRemote("origin").setCredentialsProvider(authentication).call();
+//        git.push().setPushTags().setCredentialsProvider(authentication).call();
 //
 
     }
