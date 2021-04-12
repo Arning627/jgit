@@ -1,13 +1,20 @@
 package cn.arning.jgit.utils;
 
 
-import java.io.File;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author arning
  */
 public class FileUtil {
+
+    private static String GIT_PATH = ".git";
+
+    private static String XLSX_SUFFIX = ".xlsx";
+
+    private static String TXT_SUFFIX = ".txt";
 
 
     public static List<File> findLocalGitRepository(File project, List<File> localGitRepositories) {
@@ -22,7 +29,7 @@ public class FileUtil {
             if (projectSubPath.isFile()) {
                 continue;
             }
-            if (".git".equals(projectSubPath.getName())) {
+            if (GIT_PATH.equals(projectSubPath.getName())) {
                 localGitRepositories.add(projectSubPath);
                 continue;
             }
@@ -31,9 +38,33 @@ public class FileUtil {
         return localGitRepositories;
     }
 
-    public static List<File> findRepository(){
-        return null;
-
-
+    public static List<String> findCloneUrl(String path) {
+        File file = new File(path);
+        String suffix = path.substring(path.lastIndexOf("."));
+        List<String> urls = new ArrayList<>();
+        if (TXT_SUFFIX.equals(suffix)) {
+            BufferedReader reader = null;
+            try {
+                reader = new BufferedReader(new FileReader(file));
+                String tmpUrl;
+                while ((tmpUrl = reader.readLine()) != null) {
+                    urls.add(tmpUrl);
+                }
+            } catch (IOException e) {
+                System.out.println(e);
+            } finally {
+                if (null != reader) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        System.out.println(e);
+                    }
+                }
+            }
+        }
+        if (XLSX_SUFFIX.equals(suffix)) {
+            //TODO 解析excel获取地址
+        }
+        return urls;
     }
 }

@@ -1,6 +1,7 @@
 package cn.arning.jgit.shell;
 
 
+import cn.arning.jgit.command.Clone;
 import cn.arning.jgit.command.Execute;
 import cn.arning.jgit.conf.GitUserConfig;
 import cn.arning.jgit.utils.FileUtil;
@@ -31,6 +32,9 @@ public class Method {
 
     @Autowired
     private Execute checkOutAndPull;
+
+    @Autowired
+    private Clone cloneRepos;
 
 
     /**
@@ -70,6 +74,7 @@ public class Method {
 
     /**
      * 创建或删除tag
+     *
      * @param version
      * @param message
      * @param function
@@ -134,10 +139,23 @@ public class Method {
     }
 
     @ShellMethod("print opertaion par")
-    public void operation(){
+    public void operation() {
         System.out.println("\033[31;2mauth -u [用户名] -p [密码] \033[0m");
         System.out.println("\033[31;2mtag  -v [版本] -m [描述信息] -f [c 创建,d 删除]\033[0m");
         System.out.println("\033[31;2mpull -b [分支]\033[0m");
+        System.out.println("\033[31;2mgitclone -r [项目根路径] -p [文件路径]\033[0m");
+    }
+
+    @ShellMethod("clone git repos")
+    public void gitClone(@ShellOption("-r") String rootPath, @ShellOption("-p") String readPath) {
+        File file = new File(rootPath);
+        List<String> cloneUrl = FileUtil.findCloneUrl(readPath);
+        for (String url : cloneUrl) {
+            //TODO 没写完 不想写了
+            cloneRepos.clone(url,file);
+        }
+
+
     }
 
 

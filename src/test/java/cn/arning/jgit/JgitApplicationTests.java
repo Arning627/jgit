@@ -7,11 +7,13 @@ import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.dircache.DirCache;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.util.FileUtils;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -42,13 +44,13 @@ class JgitApplicationTests {
     }
 
     @Test
-    void test2() throws Exception{
+    void test2() throws Exception {
         File file = new File(path);
         Git open = Git.open(file);
         List<DiffEntry> call = open.diff().call();
         for (DiffEntry diffEntry : call) {
             String newPath = diffEntry.getNewPath();
-            if (newPath.startsWith(".")){
+            if (newPath.startsWith(".")) {
                 continue;
             }
             DirCache add = open.add().addFilepattern(newPath).call();
@@ -59,7 +61,7 @@ class JgitApplicationTests {
 
 
     @Test
-    void test3(){
+    void test3() {
         System.out.println("\033[31;2mauth -u [用户名] -p [密码] \033[0m");
         System.out.println("\033[31;2mtag  -v [版本] -m [描述信息] -f [c 创建,d 删除]\033[0m");
         System.out.println("\033[31;2mpull -b [分支]\033[0m");
@@ -69,21 +71,12 @@ class JgitApplicationTests {
     void testStash() throws IOException, GitAPIException {
         File file = new File(path);
         Git git = Git.open(file);
-        Status call = git.status().call();
-        Set<String> modified = call.getModified();
-        for (String s : modified) {
-            System.out.println("modified=>>>>"+s);
-        }
-        Set<String> changed = call.getChanged();
-        System.out.println(changed.size());
-        for (String s : changed) {
-            System.out.println("changed=>>>>"+s);
-        }
-        Set<String> uncommittedChanges = call.getUncommittedChanges();
-        System.out.println(uncommittedChanges.size());
-        Set<String> added = call.getAdded();
-        for (String s : added) {
-            System.out.println("added=>>>>"+s);
+        git.stashCreate().setWorkingDirectoryMessage("").call();
+
+        Collection<RevCommit> call = git.stashList().call();
+        for (RevCommit revCommit : call) {
+            String s = revCommit.toString();
+            System.out.println(s);
         }
     }
 
@@ -94,7 +87,20 @@ class JgitApplicationTests {
         List<String> call = git.tagDelete().setTags("1.1.1").call();
 
         git.push().setPushTags().setCredentialsProvider(GitAuthentication.authentication()).call();
+    }
 
+    @Test
+    void cloneTest() throws GitAPIException {
+        List<String> cloneUrl = FileUtil.findCloneUrl("/Users/arning/cloneUrl.txt");
+        for (int i = 0; i < 5; i++) {
+            String s = cloneUrl.get(i);
+            File file = new File("/Users/arning/Desktop/tmp/cloneTes" + s.substring(s.lastIndexOf("/")));
+            if (!file.exists()) {
+                file.mkdir();
+                System.out.println("创建完成" + file.getName());
+                Git git = Git.cloneRepository().setURI(s).setDirectory(file).setCredentialsProvider(null).call();
+            }
+        }
 
     }
 
