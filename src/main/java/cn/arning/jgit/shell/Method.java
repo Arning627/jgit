@@ -64,7 +64,7 @@ public class Method {
      * @param pwd
      * @return
      */
-    @ShellMethod("insert user")
+    @ShellMethod("\033[31;2m-u [用户名] -p [密码] \033[0m")
     public String auth(@ShellOption("-u") String user, @ShellOption("-p") String pwd) {
         GitUserConfig.IS_AUTHENTICATION = true;
         GitUserConfig.GIT_PASSWORD = pwd;
@@ -79,7 +79,7 @@ public class Method {
      * @param message
      * @param function
      */
-    @ShellMethod("create tags")
+    @ShellMethod("\033[31;2m-v [版本] -m [描述信息] -f [c 创建,d 删除]\033[0m")
     public void tag(@ShellOption("-v") String version, @ShellOption("-m") String message, @ShellOption("-f") String function) {
         List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
         System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
@@ -110,7 +110,7 @@ public class Method {
      *
      * @param branch
      */
-    @ShellMethod("pull code")
+    @ShellMethod("\033[31;2m-b [分支]\033[0m")
     public void pull(@ShellOption("-b") String branch) {
         List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
         System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
@@ -138,15 +138,8 @@ public class Method {
         }
     }
 
-    @ShellMethod("print opertaion par")
-    public void operation() {
-        System.out.println("\033[31;2mauth -u [用户名] -p [密码] \033[0m");
-        System.out.println("\033[31;2mtag  -v [版本] -m [描述信息] -f [c 创建,d 删除]\033[0m");
-        System.out.println("\033[31;2mpull -b [分支]\033[0m");
-        System.out.println("\033[31;2mgitclone -r [项目根路径] -p [文件路径]（！！！隐约感觉有bug 先不要用！！！）\033[0m");
-    }
-
-    @ShellMethod("clone git repos")
+    
+    @ShellMethod("\033[31;2m-r [项目根路径] -p [文件路径]（！！！隐约感觉有bug 先不要用！！！）\033[0m")
     public void gitClone(@ShellOption("-r") String rootPath, @ShellOption("-p") String readPath) {
         //预计有bug
         File file = new File(rootPath);
@@ -154,6 +147,7 @@ public class Method {
         for (String url : cloneUrl) {
             //TODO 没写完 不想写了
             cloneRepos.clone(url,file);
+//            System.out.println(url);
         }
 
 
