@@ -143,7 +143,7 @@ public class Method {
         System.out.println("\033[31;2mauth -u [用户名] -p [密码] \033[0m");
         System.out.println("\033[31;2mtag  -v [版本] -m [描述信息] -f [c 创建,d 删除]\033[0m");
         System.out.println("\033[31;2mpull -b [分支]\033[0m");
-        System.out.println("\033[31;2mgitclone -r [项目根路径] -p [文件路径]（隐约感觉有bug 先不要用）\033[0m");
+        System.out.println("\033[31;2mgitclone -r [项目根路径] -p [文件路径]（！！！隐约感觉有bug 先不要用！！！）\033[0m");
     }
 
     @ShellMethod("clone git repos")
