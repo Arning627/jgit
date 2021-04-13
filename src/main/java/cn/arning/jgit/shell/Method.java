@@ -53,7 +53,7 @@ public class Method {
 
     static {
         currentDir = System.getProperties().getProperty("user.dir");
-        System.out.println("\033[31;1m" + "当前目录为: " + currentDir + "\033[0m");
+        System.out.printf("\033[31;1m当前目录为: %s\033[0m", currentDir);
         projectFile = new File(currentDir);
     }
 
@@ -82,7 +82,7 @@ public class Method {
     @ShellMethod("\033[31;2m-v [版本] -m [描述信息] -f [c 创建,d 删除]\033[0m")
     public void tag(@ShellOption("-v") String version, @ShellOption("-m") String message, @ShellOption("-f") String function) {
         List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
-        System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
+        System.out.printf("当前目录共 %d 个仓库", localGitRepository.size());
         try {
             for (File file : localGitRepository) {
                 Git git = Git.open(file);
@@ -97,7 +97,7 @@ public class Method {
                         System.out.println("无操作");
                 }
             }
-            System.out.println("更新完成,成功 " + (localGitRepository.size() - errorPath.size()) + " 条记录,失败 " + errorPath.size() + " 条记录");
+            System.out.printf("更新完成,成功 %d 条记录,失败 %d 条记录", (localGitRepository.size() - errorPath.size()), errorPath.size());
             printErrorPath();
             gits.clear();
         } catch (IOException e) {
@@ -112,14 +112,17 @@ public class Method {
      */
     @ShellMethod("\033[31;2m-b [分支]\033[0m")
     public void pull(@ShellOption("-b") String branch) {
-        List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
+        String path = "/Users/arning/develop/devops/tagDir";
+        File file1 = new File(path);
+        List<File> localGitRepository = FileUtil.findLocalGitRepository(file1, gits);
+//        List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
         System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
         try {
             for (File file : localGitRepository) {
                 Git git = Git.open(file);
                 checkOutAndPull.execute(git, branch, "");
             }
-            System.out.println("更新完成,成功 " + (localGitRepository.size() - errorPath.size()) + " 条记录,失败 " + errorPath.size() + " 条记录");
+            System.out.printf("更新完成,成功 %d 条记录,失败 %d 条记录", (localGitRepository.size() - errorPath.size()), errorPath.size());
             printErrorPath();
             gits.clear();
         } catch (IOException e) {
@@ -155,7 +158,7 @@ public class Method {
         for (String url : cloneUrl) {
             cloneRepos.clone(url, currentDir);
         }
-        System.out.println("clone完成，失败" + errorPath.size() + "条");
+        System.out.printf("clone完成,失败%d条", errorPath.size());
         printErrorPath();
     }
 

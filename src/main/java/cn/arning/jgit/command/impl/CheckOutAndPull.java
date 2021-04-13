@@ -5,11 +5,9 @@ import cn.arning.jgit.conf.GitAuthentication;
 import cn.arning.jgit.shell.Method;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
-import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.CredentialsProvider;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -26,20 +24,37 @@ public class CheckOutAndPull implements Execute {
     public void execute(Git git, String branch, String version) {
         Repository repository = git.getRepository();
         String projectName = repository.getDirectory().getParentFile().getName();
+        boolean flag = true;
         try {
-            List<Ref> branchList = git.branchList().setListMode(ListBranchCommand.ListMode.ALL).call();
-            for (Ref ref : branchList) {
+            List<Ref> localBranchList = git.branchList().call();
+            for (Ref ref : localBranchList) {
                 if (ref.getName().endsWith(branch)) {
-                    git.branchCreate().setStartPoint(ref.getName()).setName(branch).call();
-                    git.checkout().setName(branch).call();
-                    git.pull().setCredentialsProvider(GitAuthentication.authentication()).call();
+                    check(git, branch);
+                    flag = false;
                     break;
                 }
             }
-            System.out.println(projectName + "检出完成,当前分支为 " + repository.getBranch());
+            if (flag) {
+                List<Ref> remoteBranchList = git.branchList().setListMode(ListBranchCommand.ListMode.REMOTE).call();
+                for (Ref ref : remoteBranchList) {
+                    if (ref.getName().endsWith(branch)) {
+                        git.branchCreate().setStartPoint(ref.getName()).setName(branch).call();
+                        check(git, branch);
+                        break;
+                    }
+                }
+                System.out.printf("***%s没有%s分支***",projectName,branch);
+            }
+            System.out.printf("%s检出完成,当前分支为%s",projectName,repository.getBranch());
         } catch (GitAPIException | IOException firstException) {
             System.out.println(firstException);
             Method.errorPath.add(projectName);
         }
+    }
+
+    private void check(Git git, String branch) throws GitAPIException {
+        GitAuthentication authentication = GitAuthentication.authentication();
+        git.checkout().setName(branch).call();
+        git.pull().setCredentialsProvider(authentication).call();
     }
 }

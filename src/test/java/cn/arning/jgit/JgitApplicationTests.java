@@ -98,6 +98,22 @@ class JgitApplicationTests {
         }
     }
 
+    @Test
+    void branchTest() throws IOException, GitAPIException {
+        File file = new File("/Users/arning/develop/devops/tagDir/eb-flyway-db-full/.git");
+        Git open = Git.open(file);
+        List<Ref> local = open.branchList().call();
+        List<Ref> remote = open.branchList().setListMode(ListBranchCommand.ListMode.REMOTE).call();
+        for (Ref ref : local) {
+            System.out.println(ref.getName());
+        }
+        System.out.println("=============");
+        for (Ref ref : remote){
+            System.out.println(ref.getName());
+        }
+
+    }
+
 
 
 
