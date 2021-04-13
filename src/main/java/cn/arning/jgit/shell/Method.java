@@ -139,6 +139,11 @@ public class Method {
     }
 
 
+    /**
+     * 读取同目录下配置文件 clone工程
+     * @param filename
+     * @throws IOException
+     */
     @ShellMethod("\033[31;2m-f [配置文件名]\033[0m")
     public void gitClone(@ShellOption(value = "-f", defaultValue = "cloneUrl.txt") String filename) throws IOException {
         File file = new File(currentDir + "/" + filename);
