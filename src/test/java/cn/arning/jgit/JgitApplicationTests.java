@@ -59,14 +59,6 @@ class JgitApplicationTests {
         open.push().setRemote("origin").setCredentialsProvider(GitAuthentication.authentication()).call();
     }
 
-
-    @Test
-    void test3() {
-        System.out.println("\033[31;2mauth -u [用户名] -p [密码] \033[0m");
-        System.out.println("\033[31;2mtag  -v [版本] -m [描述信息] -f [c 创建,d 删除]\033[0m");
-        System.out.println("\033[31;2mpull -b [分支]\033[0m");
-    }
-
     @Test
     void testStash() throws IOException, GitAPIException {
         File file = new File(path);
@@ -91,7 +83,7 @@ class JgitApplicationTests {
 
     @Test
     void cloneTest() throws GitAPIException {
-        List<String> cloneUrl = FileUtil.findCloneUrl("/Users/arning/cloneUrl.txt");
+        List<String> cloneUrl = FileUtil.findCloneUrl(new File("/Users/arning/cloneUrl.txt"));
         for (int i = 0; i < 5; i++) {
             String s = cloneUrl.get(i);
             File file = new File("/Users/arning/Desktop/tmp/cloneTes" + s.substring(s.lastIndexOf("/")));
@@ -103,6 +95,8 @@ class JgitApplicationTests {
         }
 
     }
+
+
 
 
 }
