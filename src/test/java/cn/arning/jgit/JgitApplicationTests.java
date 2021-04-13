@@ -3,10 +3,13 @@ package cn.arning.jgit;
 import cn.arning.jgit.conf.GitAuthentication;
 import cn.arning.jgit.utils.FileUtil;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ListBranchCommand;
+import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.dircache.DirCache;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.util.FileUtils;
 import org.junit.jupiter.api.Test;
@@ -93,8 +96,8 @@ class JgitApplicationTests {
                 Git git = Git.cloneRepository().setURI(s).setDirectory(file).setCredentialsProvider(null).call();
             }
         }
-
     }
+
 
 
 
