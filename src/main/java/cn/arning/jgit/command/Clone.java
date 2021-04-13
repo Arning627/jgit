@@ -1,6 +1,5 @@
 package cn.arning.jgit.command;
 
-import java.io.File;
 
 /**
  * @author arning
@@ -8,5 +7,5 @@ import java.io.File;
 public interface Clone {
 
 
-    void clone(String url, File rootPath);
+    void clone(String url, String rootPath);
 }

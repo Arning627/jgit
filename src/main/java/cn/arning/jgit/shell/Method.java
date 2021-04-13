@@ -138,19 +138,15 @@ public class Method {
         }
     }
 
-    
+
     @ShellMethod("\033[31;2m-r [项目根路径] -p [文件路径]（！！！隐约感觉有bug 先不要用！！！）\033[0m")
-    public void gitClone(@ShellOption("-r") String rootPath, @ShellOption("-p") String readPath) {
-        //预计有bug
-        File file = new File(rootPath);
+    public void gitClone(@ShellOption(value = "-r", defaultValue = "/Users/arning/develop/code/git-clone-project") String rootPath, @ShellOption("-p") String readPath) {
         List<String> cloneUrl = FileUtil.findCloneUrl(readPath);
         for (String url : cloneUrl) {
-            //TODO 没写完 不想写了
-            cloneRepos.clone(url,file);
-//            System.out.println(url);
+            cloneRepos.clone(url, rootPath);
         }
-
-
+        System.out.println("clone完成，失败" + errorPath.size() + "条");
+        printErrorPath();
     }
 
 
