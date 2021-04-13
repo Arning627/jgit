@@ -112,10 +112,7 @@ public class Method {
      */
     @ShellMethod("\033[31;2m-b [分支]\033[0m")
     public void pull(@ShellOption("-b") String branch) {
-        String path = "/Users/arning/develop/devops/tagDir";
-        File file1 = new File(path);
-        List<File> localGitRepository = FileUtil.findLocalGitRepository(file1, gits);
-//        List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
+        List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
         System.out.println("当前目录共 " + localGitRepository.size() + " 个仓库");
         try {
             for (File file : localGitRepository) {
