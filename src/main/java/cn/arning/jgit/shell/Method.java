@@ -53,7 +53,7 @@ public class Method {
 
     static {
         currentDir = System.getProperties().getProperty("user.dir");
-        System.out.println("当前目录为: " + currentDir);
+        System.out.println("\033[31;1m" + "当前目录为: " + currentDir + "\033[0m");
         projectFile = new File(currentDir);
     }
 
@@ -139,11 +139,15 @@ public class Method {
     }
 
 
-    @ShellMethod("\033[31;2m-r [项目根路径] -p [文件路径]（！！！隐约感觉有bug 先不要用！！！）\033[0m")
-    public void gitClone(@ShellOption(value = "-r", defaultValue = "/Users/arning/develop/code/git-clone-project") String rootPath, @ShellOption("-p") String readPath) {
-        List<String> cloneUrl = FileUtil.findCloneUrl(readPath);
+    @ShellMethod("\033[31;2m-f [配置文件名]\033[0m")
+    public void gitClone(@ShellOption(value = "-f", defaultValue = "cloneUrl.txt") String filename) throws IOException {
+        File file = new File(currentDir + "/" + filename);
+        if (!file.exists()) {
+            throw new IOException("文件不存在");
+        }
+        List<String> cloneUrl = FileUtil.findCloneUrl(file);
         for (String url : cloneUrl) {
-            cloneRepos.clone(url, rootPath);
+            cloneRepos.clone(url, currentDir);
         }
         System.out.println("clone完成，失败" + errorPath.size() + "条");
         printErrorPath();

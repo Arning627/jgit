@@ -38,14 +38,14 @@ public class FileUtil {
         return localGitRepositories;
     }
 
-    public static List<String> findCloneUrl(String path) {
-        File file = new File(path);
-        String suffix = path.substring(path.lastIndexOf("."));
+    public static List<String> findCloneUrl(File readFile) {
+        String name = readFile.getName();
+        String suffix = name.substring(name.lastIndexOf("."));
         List<String> urls = new ArrayList<>();
         if (TXT_SUFFIX.equals(suffix)) {
             BufferedReader reader = null;
             try {
-                reader = new BufferedReader(new FileReader(file));
+                reader = new BufferedReader(new FileReader(readFile));
                 String tmpUrl;
                 while ((tmpUrl = reader.readLine()) != null) {
                     urls.add(tmpUrl);
