@@ -28,20 +28,20 @@ public class CreateTags implements Execute {
             Ref ref = repository.getTags().get(version);
             if (null == ref) {
                 git.tag().setMessage(describe).setName(version).call();
-                System.out.printf("%s creating tag %s ...", projectFileName, version);
+                System.out.printf("%s creating tag %s ...\n", projectFileName, version);
             }
             git.push().setPushTags().setRemote("origin").setCredentialsProvider(gitAuthentication).call();
-            System.out.printf("%s====> tag %s pushed...", projectFileName, version);
+            System.out.printf("%s====> tag %s pushed...\n", projectFileName, version);
         } catch (GitAPIException firstPushError) {
             try {
                 git.push().setPushTags().setRemote("origin").setCredentialsProvider(gitAuthentication).call();
             } catch (GitAPIException secondPushError) {
                 Method.errorPath.add(projectFileName);
-                System.out.printf("%s====> create tag error...Deleting local tag ===>%s", projectFileName, version);
+                System.out.printf("%s====> create tag error...Deleting local tag ===>%s\n", projectFileName, version);
                 try {
                     git.tagDelete().setTags(version).call();
                 } catch (GitAPIException deleteError) {
-                    System.out.printf("%s Local label deletion failed...", projectFileName);
+                    System.out.printf("%s Local label deletion failed...\n", projectFileName);
                     System.out.println(deleteError);
                 }
             }

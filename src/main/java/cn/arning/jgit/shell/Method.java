@@ -53,7 +53,7 @@ public class Method {
 
     static {
         currentDir = System.getProperties().getProperty("user.dir");
-        System.out.printf("\033[31;1m当前目录为: %s\033[0m", currentDir);
+        System.out.printf("\033[31;1m当前目录为: %s\033[0m\n", currentDir);
         projectFile = new File(currentDir);
     }
 
@@ -97,7 +97,7 @@ public class Method {
                         System.out.println("无操作");
                 }
             }
-            System.out.printf("更新完成,成功 %d 条记录,失败 %d 条记录", (localGitRepository.size() - errorPath.size()), errorPath.size());
+            System.out.printf("更新完成,成功 %d 条记录,失败 %d 条记录\n", (localGitRepository.size() - errorPath.size()), errorPath.size());
             printErrorPath();
             gits.clear();
         } catch (IOException e) {
@@ -119,7 +119,7 @@ public class Method {
                 Git git = Git.open(file);
                 checkOutAndPull.execute(git, branch, "");
             }
-            System.out.printf("更新完成,成功 %d 条记录,失败 %d 条记录", (localGitRepository.size() - errorPath.size()), errorPath.size());
+            System.out.printf("更新完成,成功 %d 条记录,失败 %d 条记录\n", (localGitRepository.size() - errorPath.size()), errorPath.size());
             printErrorPath();
             gits.clear();
         } catch (IOException e) {
@@ -155,7 +155,7 @@ public class Method {
         for (String url : cloneUrl) {
             cloneRepos.clone(url, currentDir);
         }
-        System.out.printf("clone完成,失败%d条", errorPath.size());
+        System.out.printf("clone完成,失败%d条\n", errorPath.size());
         printErrorPath();
     }
 

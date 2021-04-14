@@ -23,7 +23,7 @@ public class CloneRepos implements Clone {
         File file = new File(projectPath);
         try {
             Git.cloneRepository().setDirectory(file).setURI(url).setCredentialsProvider(GitAuthentication.authentication()).call();
-            System.out.printf("%s完成...", substring);
+            System.out.printf("%s完成...\n", substring);
         } catch (GitAPIException e) {
             System.out.println(e);
             Method.errorPath.add(url);
