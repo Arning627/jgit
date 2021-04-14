@@ -47,6 +47,7 @@ public class CheckOutAndPull implements Execute {
             System.out.printf("%s检出完成,当前分支为%s\n",projectName,repository.getBranch());
         } catch (GitAPIException | IOException firstException) {
             System.out.println(firstException);
+            System.out.printf("***%s没有%s分支***\n",projectName,branch);
             Method.errorPath.add(projectName);
         }
     }
