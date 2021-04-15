@@ -28,9 +28,6 @@ public class Method {
     private Execute createTags;
 
     @Autowired
-    private Execute deleteTags;
-
-    @Autowired
     private Execute checkOutAndPull;
 
     @Autowired
@@ -77,25 +74,17 @@ public class Method {
      *
      * @param version
      * @param message
-     * @param function
+     *
      */
-    @ShellMethod("\033[31;2m-v [版本] -m [描述信息] -f [c 创建,d 删除]\033[0m")
-    public void tag(@ShellOption("-v") String version, @ShellOption("-m") String message, @ShellOption("-f") String function) {
+    @ShellMethod("\033[31;2m-v [版本] -m [描述信息]\033[0m")
+    public void tag(@ShellOption("-v") String version, @ShellOption("-m") String message) {
         List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
         System.out.printf("当前目录共 %d 个仓库", localGitRepository.size());
         try {
             for (File file : localGitRepository) {
                 Git git = Git.open(file);
-                switch (function) {
-                    case "d":
-                        deleteTags.execute(git, message, version);
-                        break;
-                    case "c":
-                        createTags.execute(git, message, version);
-                        break;
-                    default:
-                        System.out.println("无操作");
-                }
+                createTags.execute(git, message, version);
+                System.out.println("无操作");
             }
             System.out.printf("更新完成,成功 %d 条记录,失败 %d 条记录\n", (localGitRepository.size() - errorPath.size()), errorPath.size());
             printErrorPath();
