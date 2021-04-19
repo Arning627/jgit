@@ -4,6 +4,7 @@ package cn.arning.jgit.shell;
 import cn.arning.jgit.command.Clone;
 import cn.arning.jgit.command.Execute;
 import cn.arning.jgit.conf.GitUserConfig;
+import cn.arning.jgit.utils.Assert;
 import cn.arning.jgit.utils.FileUtil;
 import org.eclipse.jgit.api.Git;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,6 @@ public class Method {
      *
      * @param version
      * @param message
-     *
      */
     @ShellMethod("\033[31;2m-v [版本] -m [描述信息]\033[0m")
     public void tag(@ShellOption("-v") String version, @ShellOption("-m") String message) {
@@ -137,9 +137,7 @@ public class Method {
     @ShellMethod("\033[31;2m-f [配置文件名]\033[0m")
     public void gitClone(@ShellOption(value = "-f", defaultValue = "cloneUrl.txt") String filename) throws IOException {
         File file = new File(currentDir + "/" + filename);
-        if (!file.exists()) {
-            throw new IOException("文件不存在");
-        }
+        Assert.isNotNull(file, "文件不存在");
         List<String> cloneUrl = FileUtil.findCloneUrl(file);
         for (String url : cloneUrl) {
             cloneRepos.clone(url, currentDir);

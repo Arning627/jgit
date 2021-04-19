@@ -2,7 +2,6 @@ package cn.arning.jgit;
 
 import cn.arning.jgit.conf.GitAuthentication;
 import cn.arning.jgit.utils.ExcelData;
-import cn.arning.jgit.utils.ExcelDataListener;
 import cn.arning.jgit.utils.FileUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
@@ -125,13 +124,13 @@ class JgitApplicationTests {
         String name = file.getName();
         ExcelReader excelReader = null;
         try {
-            excelReader = EasyExcel.read(name, ExcelData.class, new ExcelDataListener()).build();
+//            excelReader = EasyExcel.read(name, ExcelData.class, new ExcelDataListener()).build();
             ReadSheet build = EasyExcel.readSheet(0).build();
             excelReader.read(build);
-        }catch (Exception e){
-
-        }finally {
-            if (null != excelReader){
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != excelReader) {
                 excelReader.finish();
             }
         }
