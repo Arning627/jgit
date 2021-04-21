@@ -1,7 +1,6 @@
 package cn.arning.jgit.conf;
 
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.springframework.stereotype.Component;
 
 /**
  * @author arning
