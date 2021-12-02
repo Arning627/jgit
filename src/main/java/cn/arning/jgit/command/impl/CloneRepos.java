@@ -5,6 +5,7 @@ import cn.arning.jgit.conf.GitAuthentication;
 import cn.arning.jgit.shell.Method;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -17,6 +18,7 @@ public class CloneRepos implements Clone {
 
 
     @Override
+    @Async
     public void clone(String url, String rootPath) {
         String substring = url.substring(url.lastIndexOf("/"));
         String projectPath = rootPath + substring;
@@ -28,5 +30,8 @@ public class CloneRepos implements Clone {
             System.out.println(e);
             Method.errorPath.add(url);
         }
+
+
+        System.out.println(Thread.currentThread().getName());
     }
 }
