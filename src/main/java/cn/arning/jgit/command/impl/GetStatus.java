@@ -19,7 +19,7 @@ public class GetStatus implements Execute {
             Set<String> added = call.getAdded();
             Set<String> changed = call.getChanged();
             for (String s : modified) {
-                System.err.println("modified===>"+ s);
+                System.err.println("modified===>" + s);
             }
 //            for (String s : added) {
 //                System.out.println("added===>"+s);

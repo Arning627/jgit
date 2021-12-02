@@ -19,8 +19,6 @@ import java.util.Map;
 public class DeleteTags implements Execute {
 
 
-
-
     @Override
     public void execute(Git git, String describe, String version) {
 

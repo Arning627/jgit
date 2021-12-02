@@ -21,17 +21,16 @@ public class PushCode implements Execute {
             List<DiffEntry> call = git.diff().call();
             for (DiffEntry diffEntry : call) {
                 String diffEntryNewPath = diffEntry.getNewPath();
-                if (diffEntryNewPath.startsWith(".")){
+                if (diffEntryNewPath.startsWith(".")) {
                     continue;
                 }
                 git.add().addFilepattern(diffEntryNewPath).call();
             }
             git.commit().setMessage(describe).call();
             git.push().setRemote("origin").setCredentialsProvider(GitAuthentication.authentication()).call();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
-
 
 
     }
