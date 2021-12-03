@@ -139,13 +139,10 @@ public class Method {
     @ShellMethod("\033[31;2m-f [配置文件名]\033[0m")
     public void gitClone(@ShellOption(value = "-f", defaultValue = "cloneUrl.txt") String filename) throws IOException {
         File file = new File(currentDir + "/" + filename);
-//        Assert.isNotNull(file, "文件不存在");
-//        List<String> cloneUrl = FileUtil.findCloneUrl(file);
-//        for (String url : cloneUrl) {
-//            cloneRepos.clone(url, currentDir);
-//        }
-        for (int i = 0;i<240;i++){
-            cloneRepos.clone("","");
+        Assert.isNotNull(file, "文件不存在");
+        List<String> cloneUrl = FileUtil.findCloneUrl(file);
+        for (String url : cloneUrl) {
+            cloneRepos.clone(url, currentDir);
         }
         System.out.printf("clone完成,失败%d条\n", errorPath.size());
         printErrorPath();
