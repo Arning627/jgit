@@ -1,28 +1,23 @@
 package cn.arning.jgit;
 
-import cn.arning.jgit.conf.GitAuthentication;
-import cn.arning.jgit.utils.ExcelData;
-import cn.arning.jgit.utils.FileUtil;
+import cn.arning.gittools.conf.GitAuthentication;
+import cn.arning.gittools.utils.FileUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.read.metadata.ReadSheet;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
-import org.eclipse.jgit.api.PullResult;
-import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.util.FileUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 class JgitApplicationTests {
 

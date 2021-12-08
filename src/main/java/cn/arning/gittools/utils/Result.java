@@ -1,4 +1,4 @@
-package cn.arning.jgit.utils;
+package cn.arning.gittools.utils;
 
 /**
  * @author arning

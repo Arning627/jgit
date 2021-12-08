@@ -1,16 +1,8 @@
-package cn.arning.jgit.command.impl;
+package cn.arning.gittools.command.impl;
 
-import cn.arning.jgit.command.Execute;
-import cn.arning.jgit.conf.GitAuthentication;
+import cn.arning.gittools.command.Execute;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.RefUpdate;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author arning

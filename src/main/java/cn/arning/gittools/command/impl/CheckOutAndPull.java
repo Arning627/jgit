@@ -1,8 +1,8 @@
-package cn.arning.jgit.command.impl;
+package cn.arning.gittools.command.impl;
 
-import cn.arning.jgit.command.Execute;
-import cn.arning.jgit.conf.GitAuthentication;
-import cn.arning.jgit.shell.Method;
+import cn.arning.gittools.conf.GitAuthentication;
+import cn.arning.gittools.command.Execute;
+import cn.arning.gittools.shell.Method;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;

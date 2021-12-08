@@ -1,4 +1,4 @@
-package cn.arning.jgit.conf;
+package cn.arning.gittools.conf;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +33,7 @@ public class ThreadPoolConfig {
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
 
         executor.initialize();
+
         return executor;
     }
 

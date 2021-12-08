@@ -1,4 +1,4 @@
-package cn.arning.jgit;
+package cn.arning.gittools;
 
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;

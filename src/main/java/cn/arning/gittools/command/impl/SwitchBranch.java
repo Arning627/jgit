@@ -1,4 +1,4 @@
-package cn.arning.jgit.command.impl;
+package cn.arning.gittools.command.impl;
 
 import org.springframework.stereotype.Component;
 

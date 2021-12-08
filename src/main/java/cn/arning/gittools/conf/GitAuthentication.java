@@ -1,4 +1,4 @@
-package cn.arning.jgit.conf;
+package cn.arning.gittools.conf;
 
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 

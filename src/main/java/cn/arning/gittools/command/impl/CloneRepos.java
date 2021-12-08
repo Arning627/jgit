@@ -1,14 +1,16 @@
-package cn.arning.jgit.command.impl;
+package cn.arning.gittools.command.impl;
 
-import cn.arning.jgit.command.Clone;
-import cn.arning.jgit.conf.GitAuthentication;
-import cn.arning.jgit.shell.Method;
+import cn.arning.gittools.command.Clone;
+import cn.arning.gittools.conf.GitAuthentication;
+import cn.arning.gittools.shell.Method;
+import cn.arning.gittools.utils.Result;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.concurrent.Future;
 
 /**
  * @author arning
@@ -25,13 +27,17 @@ public class CloneRepos implements Clone {
         File file = new File(projectPath);
         try {
             Git.cloneRepository().setDirectory(file).setURI(url).setCredentialsProvider(GitAuthentication.authentication()).call();
-            System.out.printf("%s完成...\n", substring);
+//            return Future < Result.success() >;
+
         } catch (GitAPIException e) {
             System.out.println(e);
             Method.errorPath.add(url);
         }
 
-
         System.out.println(Thread.currentThread().getName());
+        System.out.printf("%s完成...\n", substring);
+
+//        return null;
+
     }
 }
