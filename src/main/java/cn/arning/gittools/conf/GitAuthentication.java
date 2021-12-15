@@ -8,19 +8,25 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 public class GitAuthentication extends UsernamePasswordCredentialsProvider {
 
 
-    public GitAuthentication(String username, String password) {
+    private GitAuthentication(String username, String password) {
         super(username, password);
     }
 
-    public GitAuthentication(String username, char[] password) {
+    private GitAuthentication(String username, char[] password) {
         super(username, password);
     }
 
-    public GitAuthentication() {
+    private GitAuthentication() {
         super(GitUserConfig.GIT_USERNAME, GitUserConfig.GIT_PASSWORD);
     }
 
+    public static GitAuthentication instance;
+
+    static {
+        instance = new GitAuthentication();
+    }
+
     public static GitAuthentication authentication() {
-        return new GitAuthentication();
+        return instance;
     }
 }

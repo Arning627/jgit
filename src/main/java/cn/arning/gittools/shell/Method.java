@@ -4,6 +4,7 @@ package cn.arning.gittools.shell;
 import cn.arning.gittools.command.Clone;
 import cn.arning.gittools.command.Execute;
 import cn.arning.gittools.conf.GitUserConfig;
+import cn.arning.gittools.utils.Assert;
 import cn.arning.gittools.utils.FileUtil;
 import org.eclipse.jgit.api.Git;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,20 +136,13 @@ public class Method {
      */
     @ShellMethod("\033[31;2m-f [配置文件名]\033[0m")
     public void gitClone(@ShellOption(value = "-f", defaultValue = "cloneUrl.txt") String filename) throws IOException {
-//        File file = new File(currentDir + "/" + filename);
-//        Assert.isNotNull(file, "文件不存在");
-//        List<String> cloneUrl = FileUtil.findCloneUrl(file);
-//        for (String url : cloneUrl) {
-//            cloneRepos.clone(url, currentDir);
-//        }
-
-
-
-
-        for (int i = 0;i<100000;i++){
-            cloneRepos.clone("","");
-//            System.out.println(i);
+        File file = new File(currentDir + "/" + filename);
+        Assert.isNotNull(file, "文件不存在");
+        List<String> cloneUrl = FileUtil.findCloneUrl(file);
+        for (String url : cloneUrl) {
+            cloneRepos.clone(url, currentDir);
         }
+
         System.out.printf("clone完成,失败%d条\n", errorPath.size());
 
 
