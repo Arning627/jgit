@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,6 +35,9 @@ public class Method {
     @Autowired
     private Clone cloneRepos;
 
+    @Autowired
+    private Execute fetchBranchByTag;
+
 
     /**
      * 异常目录集合
@@ -51,6 +55,7 @@ public class Method {
 
     static {
         currentDir = System.getProperties().getProperty("user.dir");
+//        currentDir = "/Users/arning/develop/code/git-test";
         System.out.printf("\033[31;1m当前目录为: %s\033[0m\n", currentDir);
         projectFile = new File(currentDir);
     }
@@ -149,8 +154,28 @@ public class Method {
         printErrorPath();
     }
 
+    @ShellMethod("-f 版本文件,-b 分支名称")
+    public void fetchBranch(@ShellOption(value = "-f", defaultValue = "fetchVersion.txt") String filename,
+                            @ShellOption("-b") String branch) {
+        File file = new File(currentDir + "/" + filename);
+        Assert.isNotNull(file, "文件不存在");
+        List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
+        Map<String, String> reposAndVersion = FileUtil.readProjectVersion(file);
+        Assert.isNotNull(reposAndVersion,"版本读取错误");
+        try {
+            for (File repos : localGitRepository) {
+                String name = repos.getParentFile().getName();
+                String version = reposAndVersion.get(name);
+                Git git = Git.open(repos);
+                fetchBranchByTag.execute(git,branch,version);
+            }
 
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.printf("创建分支完成,失败%d条\n", errorPath.size());
+        printErrorPath();
+    }
 
 
 }

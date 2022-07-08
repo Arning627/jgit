@@ -4,10 +4,16 @@ package cn.arning.gittools.utils;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
 
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author arning
@@ -84,6 +90,23 @@ public class FileUtil {
             }
         }
         return urls;
+    }
+
+    public static Map<String, String> readProjectVersion(File file) {
+        Assert.isNotNull(file, "文件不存在");
+        try {
+            HashMap<String, String> projectAndVersion = new HashMap<>();
+            Path path = file.toPath();
+            List<String> projectVersions = Files.readAllLines(path);
+            for (String projectVersion : projectVersions) {
+                String[] split = projectVersion.split(":");
+                projectAndVersion.put(split[0], split[1]);
+            }
+            return projectAndVersion;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
