@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>cn.arning</groupId>
-    <artifactId>jgit</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>gitTool</artifactId>
+    <version>0.0.1</version>
     <name>jgit</name>
-    <description>java gitutil</description>
+    <description>java gitUtil</description>
 
 
     <properties>
