@@ -109,4 +109,27 @@ public class FileUtil {
         }
     }
 
+    public static Map<String, File> findLocalGitRepository(File project, Map<String, File> localGitRepositories) {
+        if (project.isFile()) {
+            return localGitRepositories;
+        }
+        File[] projectSubPaths = project.listFiles();
+        if (projectSubPaths.length == 0) {
+            return localGitRepositories;
+        }
+        for (File projectSubPath : projectSubPaths) {
+            if (projectSubPath.isFile()) {
+                continue;
+            }
+            if (GIT_PATH.equals(projectSubPath.getName())) {
+                String name = projectSubPath.getParentFile().getName();
+                localGitRepositories.put(name,projectSubPath);
+                continue;
+            }
+            findLocalGitRepository(projectSubPath, localGitRepositories);
+        }
+
+        return localGitRepositories;
+    }
+
 }

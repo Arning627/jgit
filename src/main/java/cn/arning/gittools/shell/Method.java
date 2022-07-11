@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -52,6 +53,9 @@ public class Method {
     static File projectFile;
 
     List<File> gits = new ArrayList<>();
+
+    Map<String, File> localRepos = new ConcurrentHashMap<>();
+
 
     static {
         currentDir = System.getProperties().getProperty("user.dir");
@@ -157,17 +161,26 @@ public class Method {
     @ShellMethod("-f 版本文件,-b 分支名称")
     public void fetchBranch(@ShellOption(value = "-f", defaultValue = "fetchVersion.txt") String filename,
                             @ShellOption("-b") String branch) {
+
+        List<String> breakName = new ArrayList<>();
         File file = new File(currentDir + "/" + filename);
         Assert.isNotNull(file, "文件不存在");
-        List<File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, gits);
+
+        Map<String, File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, localRepos);
+
         Map<String, String> reposAndVersion = FileUtil.readProjectVersion(file);
-        Assert.isNotNull(reposAndVersion,"版本读取错误");
+        Assert.isNotNull(reposAndVersion, "版本读取错误");
         try {
-            for (File repos : localGitRepository) {
-                String name = repos.getParentFile().getName();
-                String version = reposAndVersion.get(name);
+
+            for (String projectName : reposAndVersion.keySet()) {
+                if (!localGitRepository.containsKey(projectName)) {
+                    breakName.add(projectName);
+                    continue;
+                }
+                File repos = localGitRepository.get(projectName);
+                String version = reposAndVersion.get(projectName);
                 Git git = Git.open(repos);
-                fetchBranchByTag.execute(git,branch,version);
+                fetchBranchByTag.execute(git, branch, version);
             }
 
         } catch (Exception e) {
