@@ -167,7 +167,6 @@ public class Method {
         Assert.isNotNull(file, "文件不存在");
 
         Map<String, File> localGitRepository = FileUtil.findLocalGitRepository(projectFile, localRepos);
-
         Map<String, String> reposAndVersion = FileUtil.readProjectVersion(file);
         Assert.isNotNull(reposAndVersion, "版本读取错误");
         try {
@@ -186,6 +185,12 @@ public class Method {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("未检出工程如下：");
+        for (String s : breakName) {
+            System.out.println(s);
+        }
+
+        System.out.println("-------------");
         System.out.printf("创建分支完成,失败%d条\n", errorPath.size());
         printErrorPath();
     }
